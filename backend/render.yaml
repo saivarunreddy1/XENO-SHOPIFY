@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: xeno-shopify-backend
+    env: java
+    buildCommand: mvn clean install -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/shopify-service-1.0.0.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: MYSQL_URL
+        fromDatabase:
+          name: xeno-mysql
+          property: connectionString
+      - key: MYSQL_ROOT_PASSWORD
+        fromDatabase:
+          name: xeno-mysql
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://xeno-shopify-frontend.onrender.com
+      - key: SHOPIFY_API_VERSION
+        value: "2023-10"
+
+databases:
+  - name: xeno-mysql
+    databaseName: xeno_shopify
+    user: root
